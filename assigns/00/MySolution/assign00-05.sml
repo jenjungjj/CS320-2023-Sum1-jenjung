@@ -22,4 +22,3 @@ val result = stringrev string1
 
 (* end of [CS320-2023-Spring-assign00-05.sml] *)
 
-
