@@ -141,9 +141,37 @@ HX-2023-05-31:
 Please assume that cs is a list of 5 cards
 that are sorted according to their ranks.
 *)
+
 fun
 card5_fullhouse
 (cs: card list): bool = raise NotImplemented320
+
+fun card5_fullhouse(cs: card list): bool =
+    let
+        fun card_rank_opt(lst: 'a list): 'a option =
+            case lst of
+                [] => NONE
+              | x::_ => SOME x
+
+        fun checkFullHouse(rank1: rank, rank2: rank, rank3: rank, rank4: rank, rank5: rank): bool =
+            (rank1 = rank2) andalso (rank2 = rank3) andalso (rank4 = rank5) orelse
+            (rank1 = rank2) andalso (rank3 = rank4) andalso (rank4 = rank5)
+
+        val rank1Opt = card_rank_opt cs
+        val rank2Opt = card_rank_opt (list.list_tailopt cs)
+        val rank3Opt = card_rank_opt (List.list_tailopt (List.list_tailopt cs))
+        val rank4Opt = card_rank_opt (List.list_tailopt (List.list_tailopt (List.list_tailopt cs)))
+        val rank5Opt = card_rank_opt (List.list_tailopt (List.list_tailopt (List.list_tailopt (List.list_tailopt cs))))
+
+    in
+        case (rank1Opt, rank2Opt, rank3Opt, rank4Opt, rank5Opt) of
+            (SOME rank1, SOME rank2, SOME rank3, SOME rank4, SOME rank5) =>
+                checkFullHouse(rank1, rank2, rank3, rank4, rank5)
+          | _ => false
+    end
+
+
+
 
 (* ****** ****** *)
 
