@@ -49,11 +49,23 @@ if i0 >= 0 then i0 else ~i0
 
 (* ****** ****** *)
 
+(*
 fun
 pow_int_int
 (x: int, y: int): int =
 if y <= 0
 then 1 else x * pow_int_int(x, y-1)
+*)
+fun
+pow_int_int
+(x: int, y: int): int =
+let
+  fun loop(y: int, res: int): int =
+    if y > 0
+    then loop(y-1, x * res) else res
+in
+  loop(y, 1)
+end
 
 (* ****** ****** *)
 
@@ -145,6 +157,17 @@ case xs of SOME x0 => x0 | _ => raise ConsMatch320)
 
 (* ****** ****** *)
 
+(*
+fun
+list_length
+(xs: 'a list): int =
+(
+case xs of
+  nil => 0
+| head :: tail => 1 + list_length(tail)
+)
+*)
+
 fun
 list_length
 (xs: 'a list): int =
@@ -158,6 +181,129 @@ let
 in
   loop(xs, 0)
 end (* end of [list_length(xs)]: let *)
+
+(* ****** ****** *)
+
+fun
+list_extend
+(xs: 'a list, x0: 'a): 'a list =
+(
+case xs of
+  nil => [x0]
+| x1 :: xs => x1 :: list_extend(xs, x0)
+)
+
+(* ****** ****** *)
+
+fun
+list_head(xs: 'a list): 'a =
+case xs of
+  nil => raise Empty | x1 :: _ => x1
+fun
+list_tail(xs: 'a list): 'a list =
+case xs of
+  nil => raise Empty | _ :: xs => xs
+
+val hd = list_head (* hd is an alias *)
+val tl = list_tail (* tl is an alias *)
+
+(* ****** ****** *)
+
+(*
+datatype 'a optn = NONE | SOME of 'a
+*)
+fun
+list_headopt(xs: 'a list): 'a optn =
+case xs of
+  nil => NONE | x1 :: _ => SOME(x1)
+fun
+list_tailopt(xs: 'a list): 'a list optn =
+case xs of
+  nil => NONE | _ :: xs => SOME(xs)
+
+(* ****** ****** *)
+
+(*
+fun
+list_last(xs: 'a list): 'a =
+case xs of
+  nil => raise Empty
+| x1 :: xs =>
+  (case xs of nil => x1 | _ => list_last(xs))
+*)
+fun
+list_last(xs: 'a list): 'a =
+let
+  fun loop(x1, xs) =
+  (case xs of
+     nil => x1
+   | x2 :: xs => loop(x2, xs))
+in
+  case xs of
+    nil => raise Empty | x1 :: xs => loop(x1, xs)
+end
+
+(* ****** ****** *)
+
+fun
+list_append
+(xs: 'a list, ys: 'a list): 'a list =
+(
+case xs of
+  nil => ys
+| x1 :: xs => x1 :: list_append(xs, ys)
+)
+
+val op@ = list_append
+  
+(* ****** ****** *)
+
+fun
+list_fromto
+(start: int, finish: int): int list =
+  if start < finish
+  then start :: list_fromto(start+1, finish) else []
+
+(* ****** ****** *)
+
+(*
+fun
+list_reverse(xs: 'a list): 'a list =
+(
+case xs of
+  nil => nil
+| x1 :: xs => list_reverse(xs) @ [x1]
+)
+*)
+fun
+list_rappend
+(xs: 'a list, ys: 'a list): 'a list =
+(
+case xs of
+  nil => ys
+| x1 :: xs => list_rappend(xs, x1 :: ys)
+)
+
+(* ****** ****** *)
+
+fun
+list_reverse
+(xs: 'a list): 'a list = list_rappend(xs, [])
+
+(* ****** ****** *)
+
+(*
+(*
+This is an inefficient tail-recursive
+implementation of list_append as it traverses
+the first argument twice.
+*)
+fun
+list_append
+( xs: 'a list
+, ys: 'a list): 'a list =
+list_rappend(list_reverse(xs), ys)
+*)
 
 (* ****** ****** *)
 
