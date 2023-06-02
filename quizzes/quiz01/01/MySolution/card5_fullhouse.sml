@@ -142,41 +142,17 @@ Please assume that cs is a list of 5 cards
 that are sorted according to their ranks.
 *)
 
-fun card5_fullhouse (cs: card list): bool =
+
+un card5_fullhouse (cs: card list): bool =
   let
-    fun countRanks ([], _, _, _, _) = false
-      | countRanks (x :: xs, rank1, count1, rank2, count2) =
-          if card_rank x = rank1 then
-            countRanks (xs, rank1, count1 + 1, rank2, count2)
-          else if card_rank x = rank2 then
-            countRanks (xs, rank1, count1, rank2, count2 + 1)
-          else
-            false
-
-    fun checkFullHouse ([], _, _) = false
-      | checkFullHouse (x1 :: x2 :: x3 :: x4 :: x5 :: xs, rank1, rank2) =
-          if countRanks (x2 :: x3 :: x4 :: x5 :: xs, rank1, 1, rank2, 1) then
-            true
-          else if countRanks (x3 :: x4 :: x5 :: xs, rank1, 1, rank2, 1) then
-            true
-          else if countRanks (x4 :: x5 :: xs, rank1, 1, rank2, 1) then
-            true
-          else if countRanks (x5 :: xs, rank1, 1, rank2, 1) then
-            true
-          else
-            checkFullHouse (x2 :: x3 :: x4 :: x5 :: xs, rank1, rank2)
-
+    val [card1, card2, card3, card4, card5] = cs  (* Destructure the list into individual elements *)
+    val rank1 = card_rank card1
+    val rank2 = card_rank card2
+    val rank3 = card_rank card3
+    val rank4 = card_rank card4
+    val rank5 = card_rank card5
   in
-    case cs of
-      x1 :: x2 :: x3 :: x4 :: x5 :: xs =>
-        if card_rank x1 = card_rank x2 then
-          checkFullHouse (x1 :: x2 :: x3 :: x4 :: x5 :: xs, card_rank x1, card_rank x5)
-        else if card_rank x1 = card_rank x3 then
-          checkFullHouse (x1 :: x3 :: x4 :: x5 :: xs, card_rank x1, card_rank x5)
-        else
-          false
-    | _ =>
-        false
+    (rank1 = rank2 andalso rank2 = rank3 andalso rank4 = rank5) orelse (rank1 = rank2 andalso rank3 = rank4 andalso rank4 = rank5)
   end
 
 
