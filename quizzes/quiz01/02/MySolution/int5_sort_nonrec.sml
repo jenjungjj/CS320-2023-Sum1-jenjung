@@ -105,10 +105,12 @@ fn (xs: int5): int5 =>
     let
       val (x1, x2, x3, x4, x5) = xs
       val (sorted1, sorted2, sorted3, sorted4) = int4_sort_nr(x1, x2, x3, x4)
-      val (sort1, sort2, sort3, sort4) = int4_sort_nr(x2, x3, x4, x5)
-      val (min1, min2) = int2_sort_nr(sorted1, sort1)
+      val (num1, num2) = int2_sort_nr(sorted1, x5)
+      val (num3, num4) = int2_sort_nr(num2, sorted2)
+      val (num5, num6) = int2_sort_nr(num4, sorted3)
+      val (num7, num8) = int2_sort_nr(num6, sorted4)
     in
-      (min1, min2, sort2, sort3, sort4)
+      (num1, num3, num5, num7, num8)
     end
 
 (* ****** ****** *)
@@ -116,4 +118,5 @@ val test03 = int5_sort_nr(2, 3, 6, 4, 1)
 val test04 = int5_sort_nr(2, 1, 4, 5, 3)
 val xs2 = int5_sort_nr(2,3,4,4,1)
 val xs3 = int5_sort_nr(3,2,4,2,3)
+val xs4 = int5_sort_nr(3, 2, 7, 4, 5)
 (* end of [CS320-2023-Sum1-quiz01-int5_sort_nonrec.sml] *)
