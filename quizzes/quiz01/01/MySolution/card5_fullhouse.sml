@@ -143,7 +143,7 @@ that are sorted according to their ranks.
 *)
 
 
-un card5_fullhouse (cs: card list): bool =
+fun card5_fullhouse (cs: card list): bool =
   let
     val [card1, card2, card3, card4, card5] = cs  (* Destructure the list into individual elements *)
     val rank1 = card_rank card1
@@ -152,7 +152,8 @@ un card5_fullhouse (cs: card list): bool =
     val rank4 = card_rank card4
     val rank5 = card_rank card5
   in
-    (rank1 = rank2 andalso rank2 = rank3 andalso rank4 = rank5) orelse (rank1 = rank2 andalso rank3 = rank4 andalso rank4 = rank5)
+    (rank1 = rank2 andalso rank2 = rank3 andalso rank4 = rank5) 
+    orelse (rank1 = rank2 andalso rank3 = rank4 andalso rank4 = rank5)
   end
 
 
