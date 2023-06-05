@@ -29,20 +29,36 @@ fun str2int_opt(cs: string): int option
 
 fun
 str2int_opt(cs: string): int option = 
-  let
-    fun helper(i0: int): int option =
-      if i0 <= 0 then NONE
-      else
-        let
-          val digit = Char.ord(String.sub(cs, i0 - 1)) - Char.ord(#"0")
-        in
-          case helper(i0 - 1) of
-            NONE => SOME digit
-          | SOME acc => SOME (10 * acc + digit)
-        end
+let
+  exception None
+
+  fun
+  make_string(strings: string, integer: int): string =
+  if integer = 1 then ""
+  else make_string(strings, integer -1) ^ str(chr(ord(String.sub(strings,integer-1))))
+  
+  fun 
+  tenth(number: int): int =
+  if number < 1 then 1
+  else 10*tenth(number-1)
+
+  fun 
+  make_integer(strings: string): int =
+  let 
+  val s0 = ord(String.sub(strings, 0))-48
+  val string_size = String.size(strings)
   in
-    helper (String.size cs)
+  if s0 < 0 orelse s0 > 10 then raise None
+  else if string_size = 1 then s0 * tenth(string_size -1 )
+  else 
+    s0 * tenth(string_size -1) + make_integer(make_string(strings, string_size))
   end
+
+in
+  if cs = "" then NONE 
+  else SOME (make_integer(cs)) handle None => NONE
+
+end
 			
 (* ****** ****** *)
 
