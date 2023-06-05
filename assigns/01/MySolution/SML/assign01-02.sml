@@ -23,9 +23,22 @@ then do subscripting.
 
 (* ****** ****** *)
 
-fun
-xlist_sub
-(xs: 'a xlist, i0: int): 'a = raise NotImplemented320
+
+exception XlistSubscript
+
+fun xlist_sub(xs: 'a xlist, i0: int): 'a =
+    let
+        fun subHelper(Nil, _) = raise XlistSubscript
+          | subHelper(Cons(x, _), 0) = x
+          | subHelper(Cons(_, tl), i) = subHelper(tl(), i - 1)
+          | subHelper(_, _) = raise XlistSubscript
+    in
+        if i0 < 0 then
+            raise XlistSubscript
+        else
+            subHelper(xs, i0)
+    end
+
 
 (* ****** ****** *)
 

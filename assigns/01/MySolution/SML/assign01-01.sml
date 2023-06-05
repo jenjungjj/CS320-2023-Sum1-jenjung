@@ -19,9 +19,33 @@ and then compute the size of the converted list
 *)
 
 (* ****** ****** *)
+(*
+datatype 'a xlist =
+  xlist_nil
+| xlist_cons of 'a * 'a xlist
+| xlist_snoc of 'a xlist * 'a
 
-fun
-xlist_size(xs: 'a xlist): int = raise NotImplemented320
+fun xlist_size(xs: 'a xlist): int =
+  case xs of
+    xlist_nil => 0
+  | xlist_cons(_, xs) => 1 + xlist_size(xs)
+  | xlist_snoc(xs, _) => xlist_size(xs) + 1
+*)
+datatype 'a xlist =
+  xlist_nil
+| xlist_cons of 'a * 'a xlist
+| xlist_snoc of 'a xlist * 'a
+
+fun xlist_size(xs: 'a xlist): int =
+  let
+    fun xlist_length_helper(xs: 'a xlist, acc: int): int =
+      case xs of
+        xlist_nil => acc
+      | xlist_cons(_, xs) => xlist_length_helper(xs, acc + 1)
+      | xlist_snoc(xs, _) => xlist_length_helper(xs, acc + 1)
+  in
+    xlist_length_helper(xs, 0)
+  end
 
 (* ****** ****** *)
 

@@ -161,6 +161,9 @@ fun card5_fullhouse (cs: card list): bool =
 
 
 
+
+
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Sum1-quiz01-card5_fullhouse.sml] *)
