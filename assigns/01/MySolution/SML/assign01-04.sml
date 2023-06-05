@@ -28,8 +28,22 @@ fun str2int_opt(cs: string): int option
 (* ****** ****** *)
 
 fun
-str2int_opt(cs: string): int option = raise NotImplemented320
-						
+str2int_opt(cs: string): int option = 
+  let
+    fun helper(i0: int): int option =
+      if i0 <= 0 then NONE
+      else
+        let
+          val digit = Char.ord(String.sub(cs, i0 - 1)) - Char.ord(#"0")
+        in
+          case helper(i0 - 1) of
+            NONE => SOME digit
+          | SOME acc => SOME (10 * acc + digit)
+        end
+  in
+    helper (String.size cs)
+  end
+			
 (* ****** ****** *)
 
 (* end of [CS320-2023-Sum1-assign01-04.sml] *)

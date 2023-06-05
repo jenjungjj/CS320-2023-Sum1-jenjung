@@ -23,20 +23,27 @@ In particular, your implementation should guarantee:
   
 (* ****** ****** *)
 
-fun 
+fun
 xlist_remove_reverse
-(xs: 'a xlist): 'a xlist =
-    let
-        fun reverseHelper(Nil, acc) = acc
-          | reverseHelper(Cons(x, tl), acc) = reverseHelper(tl(), Cons(x, acc))
-          | reverseHelper(_, _) = raise XlistReverseError
+(xs: 'a xlist): 'a xlist = 
+let
+  fun
+  helper(xs: 'a xlist, switch: bool): 'a xlist =
 
-        fun removeReverseHelper(Nil, acc) = reverseHelper(acc, Nil)
-          | removeReverseHelper(Cons(x, tl), acc) = removeReverseHelper(tl(), Cons(x, acc))
-          | removeReverseHelper(_, _) = raise XlistReverseError
-    in
-        removeReverseHelper(xs, Nil)
-    end
+  case xs of xlist_nil => xlist_nil
+  |  xlist_cons(x1, xs) => 
+        if switch = true then xlist_snoc(helper(xs, true), x1)
+        else xlist_cons(x1, helper(xs, false))
+  |  xlist_snoc(xs, x1) =>
+        if switch = true then xlist_cons(x1, helper(xs, true))
+        else xlist_snoc(helper(xs, false), x1)
+  |  xlist_append(xs, ys) => 
+        if switch = true then xlist_append(helper(ys, true), helper(xs, true))
+        else xlist_append(helper(xs, false), helper(ys, false))
+  |  xlist_reverse(xs) => helper(xs, not switch)
+in
+  helper(xs, false)
+end
 
 					   
 (* ****** ****** *)
