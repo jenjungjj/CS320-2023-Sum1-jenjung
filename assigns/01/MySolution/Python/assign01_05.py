@@ -26,8 +26,8 @@ def mylist_rappend(xs, ys):
         return ys
     else:
         x1 = xs.get_cons2()
-        xs2 = xs.get_cons1()
-        return mylist_cons(x1, mylist_cons(xs2, ys))
+        x2 = xs.get_cons1()
+        return mylist_rappend(x1, mylist_cons(x2, ys))
 
 def mylist_reverse(xs):
     def num_reverse(xs, ys):
@@ -38,6 +38,6 @@ def mylist_reverse(xs):
             x2 = xs.get_cons1()
             return num_reverse(x1, mylist_cons(x2, ys))
     return num_reverse(xs, mylist_nil()) 
-        
 
+    
 
