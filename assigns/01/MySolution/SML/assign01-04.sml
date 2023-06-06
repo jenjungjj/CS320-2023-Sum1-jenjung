@@ -33,33 +33,34 @@ let
   exception None
 
   fun
-  make_string(strings: string, integer: int): string =
-  if integer = 1 then ""
-  else make_string(strings, integer -1) ^ str(chr(ord(String.sub(strings,integer-1))))
+  to_string(x1: string, y1: int): string =
+  if y1 = 1 then ""
+  else to_string(x1, y1 -1) ^ String.str(Char.chr(Char.ord(String.sub(x1,y1-1))))
   
   fun 
-  tenth(number: int): int =
-  if number < 1 then 1
-  else 10*tenth(number-1)
+  tenth(x1: int): int =
+  if x1 < 1 then 1
+  else 10 * tenth(x1-1)
 
   fun 
-  make_integer(strings: string): int =
+  to_integer(x1: string): int =
   let 
-  val s0 = ord(String.sub(strings, 0))-48
-  val string_size = String.size(strings)
+    val s0 = Char.ord(String.sub(x1, 0))-48
+    val x1_size = String.size(x1)
   in
   if s0 < 0 orelse s0 > 10 then raise None
-  else if string_size = 1 then s0 * tenth(string_size -1 )
+  else if x1_size = 1 then 
+    s0 * tenth(x1_size -1)
   else 
-    s0 * tenth(string_size -1) + make_integer(make_string(strings, string_size))
+    s0 * tenth(x1_size -1) + to_integer(to_string(x1, x1_size))
   end
 
 in
   if cs = "" then NONE 
-  else SOME (make_integer(cs)) handle None => NONE
+  else SOME (to_integer(cs)) handle None => NONE
 
 end
-			
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Sum1-assign01-04.sml] *)

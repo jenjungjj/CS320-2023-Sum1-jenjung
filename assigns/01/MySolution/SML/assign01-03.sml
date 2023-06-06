@@ -23,27 +23,23 @@ In particular, your implementation should guarantee:
   
 (* ****** ****** *)
 
-fun
+fun 
 xlist_remove_reverse
-(xs: 'a xlist): 'a xlist = 
-let
-  fun
-  helper(xs: 'a xlist, switch: bool): 'a xlist =
-
-  case xs of xlist_nil => xlist_nil
-  |  xlist_cons(x1, xs) => 
-        if switch = true then xlist_snoc(helper(xs, true), x1)
-        else xlist_cons(x1, helper(xs, false))
-  |  xlist_snoc(xs, x1) =>
-        if switch = true then xlist_cons(x1, helper(xs, true))
-        else xlist_snoc(helper(xs, false), x1)
-  |  xlist_append(xs, ys) => 
-        if switch = true then xlist_append(helper(ys, true), helper(xs, true))
-        else xlist_append(helper(xs, false), helper(ys, false))
-  |  xlist_reverse(xs) => helper(xs, not switch)
-in
-  helper(xs, false)
-end
+(xs: 'a xlist): 'a xlist =
+  let
+    fun 
+    helper(xs: 'a xlist, cond: bool): 'a xlist =
+      case xs of
+        xlist_nil => xlist_nil
+      | xlist_cons(x, xs) => if cond then xlist_snoc(helper(xs, true), x) 
+        else xlist_cons(x, helper(xs, cond))
+      | xlist_snoc(xs, x) => if cond then xlist_cons(x, helper(xs, true)) 
+        else xlist_snoc(helper(xs, cond), x)
+      | xlist_append(xs1, xs2) => xlist_append(helper(xs1, cond), helper(xs2, cond))
+      | xlist_reverse(xs) => helper(xs, not cond)
+  in
+    helper(xs, false)
+  end
 
 					   
 (* ****** ****** *)
