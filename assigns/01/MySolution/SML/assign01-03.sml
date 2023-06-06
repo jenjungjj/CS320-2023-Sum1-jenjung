@@ -24,18 +24,17 @@ In particular, your implementation should guarantee:
 (* ****** ****** *)
 
 fun 
-xlist_remove_reverse
-(xs: 'a xlist): 'a xlist =
+xlist_remove_reverse(xs: 'a xlist): 'a xlist =
   let
-    fun 
-    helper(xs: 'a xlist, cond: bool): 'a xlist =
+    fun helper(xs: 'a xlist, cond: bool): 'a xlist =
       case xs of
         xlist_nil => xlist_nil
       | xlist_cons(x, xs) => if cond then xlist_snoc(helper(xs, true), x) 
-        else xlist_cons(x, helper(xs, cond))
+        else xlist_cons(x, helper(xs, false))
       | xlist_snoc(xs, x) => if cond then xlist_cons(x, helper(xs, true)) 
-        else xlist_snoc(helper(xs, cond), x)
-      | xlist_append(xs1, xs2) => xlist_append(helper(xs1, cond), helper(xs2, cond))
+        else xlist_snoc(helper(xs, false), x)
+      | xlist_append(xs1, xs2) => if cond then xlist_append(helper(xs2, true), helper(xs1, true)) 
+        else xlist_append(helper(xs1, false), helper(xs2, false))
       | xlist_reverse(xs) => helper(xs, not cond)
   in
     helper(xs, false)

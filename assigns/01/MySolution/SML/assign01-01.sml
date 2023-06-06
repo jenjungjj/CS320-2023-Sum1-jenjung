@@ -20,7 +20,8 @@ and then compute the size of the converted list
 
 (* ****** ****** *)
 
-fun xlist_size(xs: 'a xlist): int =
+fun 
+xlist_size(xs: 'a xlist): int =
   case xs of
     xlist_nil => 0
   | xlist_cons(x1, xs) => 1 + xlist_size(xs)

@@ -24,7 +24,8 @@ then do subscripting.
 (* ****** ****** *)
 exception XlistSubscript
 
-fun xlist_sub (xs: 'a xlist, i0: int): 'a = 
+fun 
+xlist_sub (xs: 'a xlist, i0: int): 'a = 
     if i0 < 0 orelse i0 >= xlist_size(xs) 
         then raise XlistSubscript
     else
