@@ -54,12 +54,23 @@ the previous.
 
 *)
 
-(*
-fun
-magic_triangle (n : int) : int list list = ...
-*)
+
+
 
 (* ****** ****** *)
+
+fun magic_triangle(n: int): int list list =
+  let
+    fun compute_row(prev_row: int list): int list =
+      [1] @ int1_foldleft(length prev_row - 1, [], fn (row, y) =>
+        row @ [List.nth(prev_row, y) + List.nth(prev_row, y + 1)]
+      ) @ [1]
+  in
+    int1_foldleft(n, [[1]], fn (store, _) =>
+      store @ [compute_row(List.last store)]
+    )
+  end
+
 
 (*
 val () =
