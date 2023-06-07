@@ -147,5 +147,6 @@ return acc
 *)
 
 val (sum2, _) = foldleft (fn (x, (acc, i)) => ((x+i) * acc, i+1 ), xs0, (1, 0))
+
 (* ****** ******* *)
 
