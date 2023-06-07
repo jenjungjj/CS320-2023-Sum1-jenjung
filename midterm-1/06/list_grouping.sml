@@ -54,69 +54,25 @@ val nxs = list_grouping(int1_map_list(N, fn i => N-i))
 *)
 (* ****** ****** *)
 
-fun merge([], ys) = ys
-  | merge(xs, []) = xs
-  | merge(x::xs, y::ys) =
-      if x > y then  
-        x :: merge(xs, y::ys)
-      else
-        y :: merge(x::xs, ys)
-
-fun split xs =
-  let
-    fun splitHelper ([], accM, accN) = (List.rev accM, List.rev accN)
-      | splitHelper ([a], accM, accN) = (List.rev (a :: accM), List.rev accN)
-      | splitHelper (a :: b :: cs, accM, accN) = splitHelper(cs, a :: accM, b :: accN)
-  in
-    splitHelper(xs, [], [])
-  end
-
-fun mergesort [] = []
-  | mergesort [a] = [a]
-  | mergesort xs =
-      let
-        val (M, N) = split xs
-      in
-        merge(mergesort M, mergesort N)
-      end
-
-(*)
 fun list_grouping(xs: int list): (int * int) list =
   let
-    fun helper(a: (int * int) list, x: int, acc: (int * int) list): (int * int) list =
-      if a = [] then
-        (1, x) :: acc
-      else if not(#2 (List.hd a) = x) then
-        (1, x) :: acc
-      else
-        (#1 (List.hd a) + 1, #2 (List.hd a)) :: List.tl a @ acc
-  in
-    List.foldl (fn (x, a) => helper(a, x, [])) [] (mergesort xs)
-  end
-*)
-fun list_grouping(xs: int list): (int * int) list =
-  let
-    fun helper(a: (int * int) list, x: int, acc: (int * int) list): (int * int) list =
-      case a of
-        [] => (1, x) :: acc
-      | (count, value) :: rest =>
-          if value = x then
-            (count + 1, value) :: rest @ acc
+    fun groupHelper([], current, acc) = acc
+      | groupHelper(x::rest, (count, value), acc) =
+          if x = value then
+            groupHelper(rest, (count + 1, value), acc)
           else
-            (1, x) :: acc
+            groupHelper(rest, (1, x), (count, value)::acc)
+
+    fun reverse(acc, []) = acc
+      | reverse(acc, x::rest) = reverse(x::acc, rest)
+
+    val (count, value)::rest = groupHelper(xs, (0, ~1), [])
   in
-    List.foldl (fn (x, a) => helper(a, x, [])) [] (mergesort xs)
-  end
-
+    reverse([(count, value)], rest)
+  end;
 
 (* ****** ****** *)
 
-(*
-Some testing code:
-val N = 1000
-val nxs = list_grouping(int1_map_list(N, fn i => N-i))
-*) 
 (* ****** ****** *)
-val N = 1000
-val nxs = list_grouping(int1_map_list(N, fn i => N-i))
+
 (* end of [CS320-2023-Sum1-midterm1-list_grouping.sml] *)
