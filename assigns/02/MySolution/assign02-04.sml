@@ -13,22 +13,26 @@ the left most one should be returned.
 fun list_longest_ascend(xs: int list): int list = 
 *)
 
-
 fun list_longest_ascend(xs: int list): int list =
   let
-    fun ascend_helper(xs: int list): int list =
-      case xs of
-        [] => []
-      | x :: xs' =>
+    fun greaterEqual([], _) = []
+      | greaterEqual(x :: xs', y) =
+          if x >= y 
+          then x :: greaterEqual(xs', y)
+          else greaterEqual(xs', y)
+
+    fun findLongestAscend([]) = []
+      | findLongestAscend(x :: xs') =
           let
-            val res1 = ascend_helper(List.filter (fn y => y >= x) xs')
+            val subseq1 = findLongestAscend(greaterEqual(xs', x))
+            val subseq2 = findLongestAscend(xs')
           in
-            if List.length(x :: res1) >= List.length(ascend_helper(xs'))
-            then x :: res1
-            else ascend_helper(xs')
+            if length(x :: subseq1) >= length(subseq2)
+            then x :: subseq1
+            else subseq2
           end
   in
-    ascend_helper(xs)
+    findLongestAscend(xs)
   end
 
 (* ****** ****** *)
