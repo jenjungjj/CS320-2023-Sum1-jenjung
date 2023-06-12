@@ -43,6 +43,10 @@ forall_to_exists
 (forall: ('xs,'x0)forall_t): ('xs,'x0)exists_t = ...
 *)
 
+fun forall_to_exists(forall: ('xs, 'x0) forall_t): ('xs, 'x0) exists_t =
+    fn (xs, pred) => not (forall(xs, fn x => not (pred x)))
+
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Sum1-assign02-07.sml] *)

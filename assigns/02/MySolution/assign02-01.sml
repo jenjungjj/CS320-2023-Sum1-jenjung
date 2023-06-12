@@ -16,6 +16,31 @@ fun
 find_root(f0: int -> int): int = ...
 *)
 
-(* ****** ****** *)
+(*)
+fun find_root(f0: int -> int): int =
+    let
+        fun checkRoot(n: int): int =
+            if f0 n = 0 then n
+            else if f0 (~n) = 0 then ~n
+            else checkRoot(n + 1)
+    in
+        checkRoot(0)
+    end
+*)
+fun find_root(f0: int -> int): int =
+    let
+        fun checkRoot(n: int): int =
+            if f0 n = 0 then n
+            else if f0 (~n) = 0 then ~n
+            else if f0 (n + 1) = 0 then checkRoot(n + 1)
+            else if f0 (~n - 1) = 0 then checkRoot(~n - 1)
+            else checkRoot(n + 1)
+    in
+        checkRoot(0)
+    end
 
+
+(* ****** ****** *)
+val xs = find_root(fn(x:int) => x*(x+2))
+val ys = find_root(fn(x:int) => (x+2)*(x-3))
 (* end of [CS320-2023-Sum1-assign02-01.sml] *)
