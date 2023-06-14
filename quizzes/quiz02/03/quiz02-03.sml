@@ -30,6 +30,25 @@ val quiz02_03 =
 fn(xs: int list) => ...
 *)
 
+val quiz02_03 = 
+fn(xs: int list) =>
+  let
+    val sublist = list_foldr(
+      list_labelize(xs),
+      nil,
+      fn ((_, x), acc) =>
+        case acc of
+          [] => [x]  (* Start a new sublist *)
+        | max :: _ =>
+            if x >= max then
+              x :: acc  (* Add to the current sublist *)
+            else
+              acc  (* Skip element *)
+    )
+  in
+    sublist
+  end
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Sum1-quizzes-quiz02-03.sml] *)

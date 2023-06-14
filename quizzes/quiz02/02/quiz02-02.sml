@@ -35,6 +35,15 @@ val
 quiz02_02 =
 fn(xs: int list, ys: int list) => ...
 *)
+val 
+quiz02_02 =
+fn(xs: int list, ys: int list) =>
+    let
+      val diff = 10
+      val checkPair = fn(x, y) => abs(x - y) < diff
+    in
+      list_x2exists(xs, ys, checkPair)
+    end
 
 (* ****** ****** *)
 

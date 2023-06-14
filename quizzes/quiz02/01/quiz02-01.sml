@@ -55,6 +55,17 @@ quiz02_01 =
 fn(word: string) => ...
 *)
 
+val 
+quiz02_01 =
+fn (word: string) =>
+    let
+      val countChar = fn (c: char) =>
+        string_foldleft(word, 0, fn (count, x) => if Char.ord x = Char.ord c then count + 1 else count)
+    in
+      countChar
+    end
+
+
 (* ****** ****** *)
 
 (* end of [CS320-2023-Sum1-quizzes-quiz02-01.sml] *)
