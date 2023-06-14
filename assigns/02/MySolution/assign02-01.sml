@@ -16,17 +16,6 @@ fun
 find_root(f0: int -> int): int = ...
 *)
 
-(*)
-fun find_root(f0: int -> int): int =
-    let
-        fun checkRoot(n: int): int =
-            if f0 n = 0 then n
-            else if f0 (~n) = 0 then ~n
-            else checkRoot(n + 1)
-    in
-        checkRoot(0)
-    end
-*)
 fun find_root(f0: int -> int): int =
     let
         fun checkRoot(n: int): int =
@@ -38,7 +27,6 @@ fun find_root(f0: int -> int): int =
     in
         checkRoot(0)
     end
-
 
 (* ****** ****** *)
 val xs = find_root(fn(x:int) => x*(x+2))

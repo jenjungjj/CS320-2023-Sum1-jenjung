@@ -29,16 +29,7 @@ in
   if n0 >= 2 then loop(2) else false
 end
 *)
-(*)
-fun isPrime(n0: int): bool =
-  let
-    fun isDivisibleByAny(x: int, xs: int list): bool =
-      list_exists (xs, fn(i) => x mod i = 0)
-  in
-    n0 >= 2 andalso
-    not (isDivisibleByAny(n0, list_fromto(2, n0 - 1)))
-  end
-*)
+
 fun isPrime(n0: int): bool =
   let
     val divisors = list_fromto(2, n0 - 1)
