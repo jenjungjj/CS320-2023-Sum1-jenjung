@@ -31,47 +31,25 @@ fn(xs: int list) => ...
 *)
 
 
-(*)
+
 val quiz02_03 = 
-  fn(xs: int list) =>
+fn(xs: int list) =>
     let
       val sublist = list_foldr(
         list_labelize(xs),
         [],
-        fn ((_, x), acc) =>
-          case acc of
+        fn ((_, x), count) =>
+          case count of
             [] => [x]  (* Start a new sublist *)
           | max :: _ =>
               if x > max then
-                x :: acc  (* Add to the current sublist *)
+                x :: count  (* Add to the current sublist *)
               else
-                acc  (* Skip element *)
+                count  (* Skip element *)
       )
     in
       sublist
     end
-
-*)
-val quiz02_03 = 
-  fn(xs: int list) =>
-    let
-      val sublist = list_foldr(
-        list_labelize(xs),
-        [],
-        fn ((_, x), acc) =>
-          if null acc orelse x > hd acc then
-            x :: acc  (* Add to the current sublist *)
-          else
-            acc  (* Skip element *)
-      )
-    in
-      sublist
-    end
-
-
-
-
-
 
 
 (* ****** ****** *)
