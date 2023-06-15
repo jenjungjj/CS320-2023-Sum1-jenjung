@@ -31,7 +31,7 @@ fn(xs: int list) => ...
 *)
 
 
-
+(*)
 val quiz02_03 = 
   fn(xs: int list) =>
     let
@@ -46,6 +46,23 @@ val quiz02_03 =
                 x :: acc  (* Add to the current sublist *)
               else
                 acc  (* Skip element *)
+      )
+    in
+      sublist
+    end
+
+*)
+val quiz02_03 = 
+  fn(xs: int list) =>
+    let
+      val sublist = list_foldr(
+        list_labelize(xs),
+        [],
+        fn ((_, x), acc) =>
+          if null acc orelse x > hd acc then
+            x :: acc  (* Add to the current sublist *)
+          else
+            acc  (* Skip element *)
       )
     in
       sublist
