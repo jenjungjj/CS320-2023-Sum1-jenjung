@@ -22,6 +22,23 @@ And so on, and so forth
 (*
 val the_ln2_stream: real stream = fn() => ...
 *)
+val the_ln2_stream: real stream = fn() => 
+  let
+    fun next_sum(n: int): real =
+      if n mod 2 = 0 then
+        -1.0 / real(n)
+      else
+        1.0 / real(n)
+  
+    fun generate_sum(n: int): real stream =
+      let
+        val prev_sum = Stream.next(the_ln2_stream())
+      in
+        Stream.cons(prev_sum + next_sum(n), generate_sum(n + 1))
+      end
+  in
+    Stream.cons(1.0, generate_sum(2))
+  end
 
 (* ****** ****** *)
 

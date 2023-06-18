@@ -71,6 +71,23 @@ foreach_to_map_list(string_iforeach)(cs, ifopr)
 val
 word_neighbors = fn(word: string) => ...
 *)
+val AB = "abcdefghijklmnopqrstuvwxyz"
+
+val
+word_neighbors = fn(word: string) =>
+  let
+    val len = string_length(word)
+    val neighbors = string_imap_list(word, fn (i, c) =>
+      string_tabulate(len, fn j =>
+        if j = i then
+          AB
+        else
+          strsub(word, j, 1)
+      )
+    )
+  in
+    string_filter(neighbors, fn w => w <> word)
+  end
 
 (* ****** ****** *)
 

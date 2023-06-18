@@ -17,6 +17,16 @@ list of rows of a matrix, then the returned
 stream consist of lists that are columns of the
 matrix.
 *)
+fun 
+stream_ziplst (streams: 'a stream list): 'a list stream =
+  let
+    fun zip_streams [] = Stream.empty()
+      | zip_streams (stream::rest) =
+          Stream.zip(stream, zip_streams rest, op::)
+          |> Stream.map (fn (x, xs) => x::xs)
+  in
+    zip_streams streams
+  end
 
 (* ****** ****** *)
 
