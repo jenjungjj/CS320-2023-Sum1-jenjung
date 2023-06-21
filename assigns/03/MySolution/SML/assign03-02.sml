@@ -71,24 +71,34 @@ foreach_to_map_list(string_iforeach)(cs, ifopr)
 val
 word_neighbors = fn(word: string) => ...
 *)
-val AB = "abcdefghijklmnopqrstuvwxyz"
 
-val
-word_neighbors = fn(word: string) =>
-  let
-    val len = string_length(word)
-    val neighbors = string_imap_list(word, fn (i, c) =>
-      string_tabulate(len, fn j =>
-        if j = i then
-          AB
-        else
-          strsub(word, j, 1)
-      )
-    )
-  in
-    string_filter(neighbors, fn w => w <> word)
-  end
+fun 
+neighbors(str: string, num: int, ch: char): string =
+    let
+        fun helper(index, c) =
+            if index <> num then c else ch
+    in
+        string_implode (string_imap_list (str, helper))
+    end
+
+val 
+word_neighbors = fn (input: string) =>
+    let
+        fun processLetter(idx, letter) =
+            let
+                val filteredStr = string_filter (AB, fn z => z <> letter)
+                fun helper(_, h) = neighbors (input, idx, h)
+            in
+                string_imap_list (string_implode filteredStr, helper)
+            end
+    in
+        list_concat (string_imap_list (input, processLetter))
+    end
+
+
+
+
 
 (* ****** ****** *)
-
+val xs = word_neighbors("hello")
 (* end of [CS320-2023-Sum1-assign03-02.sml] *)

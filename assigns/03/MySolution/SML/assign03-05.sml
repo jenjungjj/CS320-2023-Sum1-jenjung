@@ -16,14 +16,26 @@ if i1+j1 < i2+j2.
 (*
 val theNatPairs: (int*int) stream = fn () => ...
 *)
+
+
 val theNatPairs: (int * int) stream = fn () =>
   let
-    fun generate_pairs(i: int, j: int): (int * int) stream =
-      Stream.cons((i, j), generate_pairs(i + 1, 0))
-      |> Stream.appendLazy(generate_pairs(i, j + 1))
+    fun pairSumLess ((i1, j1), (i2, j2)) =
+      i1 + j1 < i2 + j2
+
+    val allPairs = stream_concat (stream_tabulate (10000, fn i =>
+      stream_make_map (int1_streamize (i + 1), fn j => (i - j, j))
+    ))
+
+    val sortedPairs = stream_make_filter (allPairs, fn p => true)
+
   in
-    generate_pairs(0, 0)
+    sortedPairs ()
   end
+
+
+
+
 
 (* ****** ****** *)
 

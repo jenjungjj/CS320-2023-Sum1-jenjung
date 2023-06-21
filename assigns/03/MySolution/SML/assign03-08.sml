@@ -17,15 +17,19 @@ list of rows of a matrix, then the returned
 stream consist of lists that are columns of the
 matrix.
 *)
-fun 
-stream_ziplst (streams: 'a stream list): 'a list stream =
+
+fun stream_ziplst (xs: 'a stream list): 'a list stream =
   let
-    fun zip_streams [] = Stream.empty()
-      | zip_streams (stream::rest) =
-          Stream.zip(stream, zip_streams rest, op::)
-          |> Stream.map (fn (x, xs) => x::xs)
+    fun helper (lst: 'a stream list, n: int) =
+      let
+        val currentElems = List.map (fn stm => stream_get_at(stm, n)) lst
+        val nextStream = fn () => helper (lst, n + 1)
+      in
+        strcon_cons (currentElems, nextStream)
+      end
+      handle Subscript => strcon_nil
   in
-    zip_streams streams
+    fn () => helper (xs, 0)
   end
 
 (* ****** ****** *)

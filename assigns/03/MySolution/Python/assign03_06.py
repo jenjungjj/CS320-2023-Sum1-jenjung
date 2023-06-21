@@ -13,8 +13,6 @@ Here is an implementation of the famous 8-queen puzzle:
 https://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/x631.html
 //
 """
-####################################################
-def solve_N_queen_puzzle(N):
 """
 ######
 A board of size N is a tuple of length N.
@@ -36,5 +34,29 @@ queen pieces (one on each row and on each column) such
 that no queen piece on the board can catch any other ones
 on the same board.
 """
-    raise NotImplementedError
+####################################################
+# def solve_N_queen_puzzle(N):
+def solve_N_queen_puzzle(N):
+    def is_safe(board, row, col):
+        for i in range(row):
+            if board[i] == col or board[i] - col == i - row or board[i] - col == row - i:
+                return False
+        return True
+
+    def helper(board, row):
+        if row == N:
+            yield board.copy()
+        else:
+            for col in range(N):
+                if is_safe(board, row, col):
+                    board[row] = col
+                    yield from helper(board, row + 1)
+                    board[row] = -1
+
+    initial_board = [-1] * N
+    return generator_of_stream(stream_make_filter(generator_tabulate(N, lambda _: initial_board), lambda board: board[N - 1] != -1))
+
+
+
+
 ####################################################
