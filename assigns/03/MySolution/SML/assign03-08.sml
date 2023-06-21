@@ -18,6 +18,7 @@ stream consist of lists that are columns of the
 matrix.
 *)
 
+
 fun stream_ziplst (xs: 'a stream list): 'a list stream =
   let
     fun helper (lst: 'a stream list, n: int) =
@@ -31,6 +32,7 @@ fun stream_ziplst (xs: 'a stream list): 'a list stream =
   in
     fn () => helper (xs, 0)
   end
+
 
 (* ****** ****** *)
 
