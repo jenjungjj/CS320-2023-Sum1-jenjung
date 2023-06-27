@@ -16,23 +16,25 @@ stream_permute_list(xs: 'a list): 'a list stream = ...
 //
 *)
 
-fun
-stream_permute_list(xs: 'a list): 'a list stream = 
-let
-  fun insert(x, []) = [[x]]
-  | insert(x, (y::ys)) =
-  (x::y::ys) :: list_map((insert(x, ys)), (fn ys => y::ys))
-
-  fun permutate([]) = list_streamize [[]]
-  | permutate((x::xs)) =
+fun 
+stream_permute_list(xs: 'a list): 'a list stream =
+  let
+    fun list_insert(x, []) = [[x]]
+      | list_insert(x, y::ys) =
         let
-            val permute = permutate(xs)
+          val inserted = x :: y :: ys
+          val mapped = list_map (list_insert(x, ys), fn ys => y :: ys)
         in
-            stream_concat(stream_make_map(permute, (fn x1 => list_streamize(insert(x, x1))))) 
+          inserted :: mapped
         end
-in
-    permutate(xs)
-end
+
+    fun permutate_helper [] = list_streamize [[]]
+      | permutate_helper (x::xs) =
+        stream_concat (stream_make_map (permutate_helper xs, fn x1 => list_streamize (list_insert(x, x1))))
+  in
+    permutate_helper xs
+  end
+
 
 (* ****** ****** *)
 

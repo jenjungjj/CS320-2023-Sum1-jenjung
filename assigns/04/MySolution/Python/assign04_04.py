@@ -27,23 +27,29 @@ wordle_hint(w1, w2) =
 (2, b), (1, b), (2, c), (1, c), (0, d)
 """
 ########################################################################
+
 def wordle_hint(w1, w2):
-    word = []
-    have = []
-    amount = []
-    for tup in zip(w1,w2):
-        w_1, ch = tup
-        if not(ch in have):
-            have.append(ch)
-            amount.append(w1.count(ch))
-        a = have.index(ch)
-        if (w_1 == ch):
-            word.append((1, ch))
-            amount[a] -= 1
-        else:
-            if (amount[a] == 0):
-                word.append((0, ch))
-            else:
-                word.append((2, ch))
-    return word
+    hints = []
+    char_set = []
+    char_count = []
+
+    i = 0
+    while i < len(w1) and i < len(w2):
+        char_w1 = w1[i]
+        char_w2 = w2[i]
+
+        if char_w2 not in char_set:
+            char_set.append(char_w2)
+            char_count.append(w1.count(char_w2))
+
+        index = char_set.index(char_w2)
+
+        hint = 1 if char_w1 == char_w2 else (0 if char_count[index] == 0 else 2)
+        hints.append((hint, char_w2))
+        char_count[index] -= 1
+
+        i += 1
+
+    return hints
+
 ########################################################################
