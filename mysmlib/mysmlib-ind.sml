@@ -7,492 +7,270 @@ This is an individual library,
 that is, it is NOT shared by the class.
 *)
 (* ****** ****** *)
-
-val int_max = Int.max
-val int_min = Int.min
-
-(* ****** ****** *)
-
-type 'a optn = 'a option
-
-(* ****** ****** *)
-
-exception
-ERROR320 of string optn
-
-(* ****** ****** *)
-
-exception ConsMatch320
-exception OptnSubscript320
-exception ListSubscript320
-
-(* ****** ****** *)
-
-exception NotImplemented320
-
-(* ****** ****** *)
+val
+rec 
+fact = fn(x: int) =>
+if x > 0 then x * fact(x-1) else 1
 
 fun
-assert320
-(claim: bool): unit =
-if claim
-  then () else raise ERROR320(NONE)
-(* end of [assert320] *)
+myloop(x: int): int = 
+(fact(x); myloop(x+1)) handle Overflow => x
 
 fun
-assert320_some
-(claim: bool, errmsg: string): unit =
-if claim
-  then () else raise ERROR320(SOME(errmsg))
-(* end of [assert320_some] *)
-
-(* ****** ****** *)
-
-val abs_int =
-fn(i0: int) =>
-if i0 >= 0 then i0 else ~i0
-
-(* ****** ****** *)
-
-(*
-fun
-pow_int_int
-(x: int, y: int): int =
-if y <= 0
-then 1 else x * pow_int_int(x, y-1)
-*)
-fun
-pow_int_int
-(x: int, y: int): int =
+isPrime(n0: int): bool = 
 let
-  fun loop(y: int, res: int): int =
-    if y > 0
-    then loop(y-1, x * res) else res
-in
-  loop(y, 1)
-end
-
-(* ****** ****** *)
-
-fun
-char_of_digit
-(digit: int): char =
-let
-  val () =
-  assert320_some
-  (digit >= 0, "int2char")
-  val () =
-  assert320_some
-  (digit <= 9, "int2char")
-in
-  chr(ord(#"0") + digit)
-end (* end of [char_of_digit] *)
-
-(* ****** ****** *)
-
-fun
-print_int
-(x: int) = print(Int.toString(x))
-fun
-print_char
-(c: char) = print( String.str(c) )
-
-(* ****** ****** *)
-fun
-print_bool
-(x: bool) = print(Bool.toString(x))
-(* ****** ****** *)
-
-fun
-print_string(cs: string) = print(cs)
-
-(* ****** ****** *)
-
-fun
-print_newline() = print("\n")
-fun
-println(cs) = (print(cs); print_newline())
-fun
-println_string(cs) = (print(cs); print_newline())
-
-(* ****** ****** *)
-
-fun
-list_is_nil(xs: 'a list): bool =
-(
-case xs of nil => true | _ :: _ => false)
-fun
-list_is_cons(xs: 'a list): bool =
-(
-case xs of nil => false | _ :: _ => true)
-
-(* ****** ****** *)
-
-fun
-list_unnil(xs: 'a list): unit =
-(
-case xs of nil => () | _ => raise ConsMatch320)
-fun
-list_uncons(xs: 'a list): 'a * 'a list =
-(
-case xs of
-x1 :: xs => (x1, xs) | _ => raise ConsMatch320)
-
-(* ****** ****** *)
-
-fun
-optn_is_none(xs: 'a optn): bool =
-(
-case xs of NONE => true | SOME _ => false)
-fun
-optn_is_some(xs: 'a optn): bool =
-(
-case xs of NONE => false | SOME _ => true)
-
-(* ****** ****** *)
-
-fun
-optn_unnone(xs: 'a optn): unit =
-(
-case xs of NONE => () | _ => raise ConsMatch320)
-fun
-optn_unsome(xs: 'a optn): 'a =
-(
-case xs of SOME x0 => x0 | _ => raise ConsMatch320)
-
-(* ****** ****** *)
-
-(*
-fun
-list_length
-(xs: 'a list): int =
-(
-case xs of
-  nil => 0
-| head :: tail => 1 + list_length(tail)
-)
-*)
-
-fun
-list_length
-(xs: 'a list): int =
-let
-  fun
-  loop
-  (xs: 'a list, res: int): int =
-  case xs of
-    nil => res
-  | _ :: xs => loop(xs, res+1)
-in
-  loop(xs, 0)
-end (* end of [list_length(xs)]: let *)
-
-(* ****** ****** *)
-
-fun
-list_extend
-(xs: 'a list, x0: 'a): 'a list =
-(
-case xs of
-  nil => [x0]
-| x1 :: xs => x1 :: list_extend(xs, x0)
-)
-
-(* ****** ****** *)
-
-fun
-list_head(xs: 'a list): 'a =
-case xs of
-  nil => raise Empty | x1 :: _ => x1
-fun
-list_tail(xs: 'a list): 'a list =
-case xs of
-  nil => raise Empty | _ :: xs => xs
-
-val hd = list_head (* hd is an alias *)
-val tl = list_tail (* tl is an alias *)
-
-(* ****** ****** *)
-
-(*
-datatype 'a optn = NONE | SOME of 'a
-*)
-fun
-list_headopt(xs: 'a list): 'a optn =
-case xs of
-  nil => NONE | x1 :: _ => SOME(x1)
-fun
-list_tailopt(xs: 'a list): 'a list optn =
-case xs of
-  nil => NONE | _ :: xs => SOME(xs)
-
-(* ****** ****** *)
-
-(*
-fun
-list_last(xs: 'a list): 'a =
-case xs of
-  nil => raise Empty
-| x1 :: xs =>
-  (case xs of nil => x1 | _ => list_last(xs))
-*)
-fun
-list_last(xs: 'a list): 'a =
-let
-  fun loop(x1, xs) =
-  (case xs of
-     nil => x1
-   | x2 :: xs => loop(x2, xs))
-in
-  case xs of
-    nil => raise Empty | x1 :: xs => loop(x1, xs)
-end
-
-(* ****** ****** *)
-
-fun
-list_append
-(xs: 'a list, ys: 'a list): 'a list =
-(
-case xs of
-  nil => ys
-| x1 :: xs => x1 :: list_append(xs, ys)
-)
-
-val op@ = list_append
-  
-(* ****** ****** *)
-
-fun
-list_fromto
-(start: int, finish: int): int list =
-let
-  fun
-  loop
-  (finish: int, res: int list): int list =
-  if start < finish
-  then loop(finish-1, (finish-1) :: res) else res
-in
-  loop(finish, [(*nil*)])
-end
-
-(* ****** ****** *)
-
-(*
-fun
-list_reverse(xs: 'a list): 'a list =
-(
-case xs of
-  nil => nil
-| x1 :: xs => list_reverse(xs) @ [x1]
-)
-*)
-fun
-list_rappend
-(xs: 'a list, ys: 'a list): 'a list =
-(
-case xs of
-  nil => ys
-| x1 :: xs => list_rappend(xs, x1 :: ys)
-)
-
-(* ****** ****** *)
-
-fun
-list_reverse
-(xs: 'a list): 'a list = list_rappend(xs, [])
-
-(* ****** ****** *)
-
-(*
-(*
-This is an inefficient tail-recursive
-implementation of list_append as it traverses
-the first argument TWICE.
-*)
-fun
-list_append
-( xs: 'a list
-, ys: 'a list): 'a list =
-(
-  case ys of
-    nil => ys
-  | _ => list_rappend(list_reverse(xs), ys) )
-*)
-
-
-(* A Swiss army's knife for left-handed
-*)
 fun 
-list_foldl
-(xs: 'a list, r0: 'a, fopr: 'r * 'a -> 'r) 
-(* fopr is a first order function and 
-a function that takes a first order function as its argument is a second order funtion *)
-(
-  case xs of 
-    nil => r0
-  | x1 :: xs => list_foldl(xs, fopr(r0, x1), fopr)
-)
-
-(* A Swiss army's knife for right handed
-*)
-fun 
-list_foldr
-(xs: 'a list, r0: 'r, fopr: 'a * 'r -> 'r) 
-(* fopr is a first order function and 
-a function that takes a first order function as its argument is a second order funtion *)
-(
-  case xs of 
-    nil => r0
-  | x1 :: xs => fopr(z1, list_foldr(xs, r0, fopr))
-)
-(*
-this list_foldr implementation is tail-recursive 
-*)
-fun 
-list_foldr
-(xs: 'a list, r0: 'r, fopr: 'a * 'r -> 'r) =
-list_foldl(list_reverse(xs), r0, fn(r, x) => fopr(x, r)) 
-
-fun list_length
-(xs: 'a list): int = 
-list_foldl(xs, 0, fn(r, x) => r + 1) 
-
-fun
-list_append
-(xs: 'a list, x0: 'a): 'a list =
-list_foldr(xs, ys, fn(x, r) => x :: r)
-
-fun
-list_rappend
-(xs: 'a list, x0: 'a): 'a list =
-list_foldl(xs, ys, fn(x, r) => x :: r)
-
-(* ****** ****** *)
-
-fun list_map(xs: 'apple list, 
-fopr: 'apple -> 'banana): 'banana list =
-list_foldr(xs, [], fn(x, r) => fopr(x) :: r) 
-
-(* ****** ****** *)
-
-
-
-fun 
-list_foreach
-(xs: 'a list, work: 'a -> unit): unit =
-let
-val _ = 
-list_forall
-(xs, fn(x1) => (work(x1); true)) in ()
-end
-
-(* ****** ****** *)
-
-fun
-list_forall
-(xs: 'a list, test: 'a -> bool): bool =
-let
-exception False 
-in
-try
-list_foreach(xs, fn(x1) => if test(x2) then () else raise False; true)
-handle False => false 
-
-(* ****** ****** *)
-
-fun
-foreach_to_forall
-( foreach
-: ('xs * ('x0 -> unit)) -> unit
-)
-: ('xs * ('x0 -> bool)) -> bool =
-fn(xs: 'xs, test: 'x0 -> bool) =>
-let
-  exception False
-in(*let*)
-(* ****** ****** *)
-let
-val () =
-foreach
-(
-xs
-,
-fn(x0: 'x0) =>
-if
-test(x0) then () else raise False)
-in
-  ( true )
-end handle False(*void*) => (false)
-
-(* ****** ****** *)
-end (* end of [foreach_to_forall]: let *)
-
-fun 
-forall_to_foreach
-( forall
-: ('xs * ('x0 -> bool)) -> bool) 
-: ('xs * ('x0 -> unit)) -> unit =
-fn(xs, work) => 
-(forall(xs, fn(x0) => (work(x0); true)); ())
-
-(* ****** ****** *)
-
-fun
-foldleft_to_length
-( foldleft
-: ('xs * int * (int * 'x0 -> 'r0)) -> 'r0) 
-: ('xs -> int) = 
-fn(xs: 'xs)  => foldleft (xs, 0, fn(r0, x0) => r0 + 1)
-(* ****** ****** *)
-
-fun
-foreach_to_length
-(foreach) = 
-foldleft_to_length(foreach_to_foldleft(foreach))
-
-(* ****** ****** *)
-fun
-int0_foreach
-(n0: int, work: unit -> unit) =
-let
-fun
-  loop(i0: int): unit =
-  if i0 >= n0
-  then ()
-  else (work(); loop(i0+1)) in loop(0(*i0*))
-end (* end of [int0_foreach(n0, work)]: let *)
-
-(* ****** ****** *)
-
-fun
-int1_foreach
-(n0: int, work: int -> unit) =
-let
-fun
-loop(i0: int): unit =
+helper(i0: int): bool = 
 if i0 >= n0
-then ()
-else (work(i0); loop(i0+1)) in loop(0(*i0*))
-end (* end of [int1_foreach(n0, work)]: let *)
-(* ****** ****** *)
+then true 
+else if (n0 mod i0) <> 0 
+  then helper(i0+1) else false 
+in
+if n0 <= 1 then false else helper(2) 
+end 
+
+fun
+assert(claim: bool) = 
+if not(claim)
+  then raise MyAssertExn 
+  else () 
+
+fun
+int2str
+(x: int): string =
+let
+val _ = assert(x >= 0)
+in
+if x < 10
+then
+String.str(Char.chr((Char.ord(#"0") + x mod 10)))
+else (* recursion *)
+int2str(x div 10) ^
+String.str(Char.chr((Char.ord(#"0") + x mod 10)))
+end
+
+fun helper_str2int(i0: int): int = 
+  if i0 <= 0 then 0 else
+  10 * helper(i0 -1) + 
+  Char.ord(String.sub(cs, i0-1))-Char.ord(#"0")
+
+fun reverse
+  (cs: string, size: int, index: int): string = 
+    if index < 0 
+        then ""
+  else
+    String.substring(cs, index, 1) 
+    ^ reverse(cs, size, index -1)
+
+fun helper_xlist_remove_reverse(xs: 'a xlist, cond: bool): 'a xlist =
+      case xs of
+        xlist_nil => xlist_nil
+      | xlist_cons(x, xs) => if cond then xlist_snoc(helper(xs, true), x) 
+        else xlist_cons(x, helper(xs, false))
+      | xlist_snoc(xs, x) => if cond then xlist_cons(x, helper(xs, true)) 
+        else xlist_snoc(helper(xs, false), x)
+      | xlist_append(xs1, xs2) => if cond then xlist_append(helper(xs2, true), helper(xs1, true)) 
+        else xlist_append(helper(xs1, false), helper(xs2, false))
+      | xlist_reverse(xs) => helper(xs, not cond)
+
+fun
+  to_string(x1: string, y1: int): string =
+  if y1 = 1 then ""
+  else to_string(x1, y1 -1) ^ String.str(Char.chr(Char.ord(String.sub(x1,y1-1))))
 
 fun 
-string_foreach
-(xs: string, work: car -> unit) : unit = 
-int1_foreach(String.size(xs), fn(i) => work(String.sub(xs, i)))
+  tenth(x1: int): int =
+  if x1 < 1 then 1
+  else 10 * tenth(x1-1)
 
+fun 
+  to_integer(x1: string): int =
+  let 
+    val s0 = Char.ord(String.sub(x1, 0))-48
+    val x1_size = String.size(x1)
+  in
+  if s0 < 0 orelse s0 > 10 then raise None
+  else if x1_size = 1 then 
+    s0 * tenth(x1_size -1)
+  else 
+    s0 * tenth(x1_size -1) + to_integer(to_string(x1, x1_size))
+  end
 (* ****** ****** *)
+fun checkRoot(n: int): int =
+            if f0 n = 0 then n
+            else if f0 (~n) = 0 then ~n
+            else if f0 (n + 1) = 0 then checkRoot(n + 1)
+            else if f0 (~n - 1) = 0 then checkRoot(~n - 1)
+            else checkRoot(n + 1)
 
-(* ****** ****** *)
+fun helperFunc_list_range(start: int, finish: int, acc: int list): int list =
+            if start >= finish 
+            then
+                list_reverse(acc)
+            else
+                helperFunc(start + 1, finish, start :: acc)
 
-(* ****** ****** *)
-(* ****** ****** *)
+fun loop_list_tabulate(i: int, acc: 'a list): 'a list =
+            if i >= n then list_reverse(acc)
+            else loop(i + 1, f(i) :: acc)
 
-(* ****** ****** *)
-(* ****** ****** *)
-(* ****** ****** *)
-(* ****** ****** *)
+fun greaterEqual([], _) = []
+      | greaterEqual(x :: xs', y) =
+          if x >= y 
+          then x :: greaterEqual(xs', y)
+          else greaterEqual(xs', y)
+
+fun findLongestAscend([]) = []
+      | findLongestAscend(x :: xs') =
+          let
+            val subseq1 = findLongestAscend(greaterEqual(xs', x))
+            val subseq2 = findLongestAscend(xs')
+          in
+            if length(x :: subseq1) >= length(subseq2)
+            then x :: subseq1
+            else subseq2
+          end
+
+fun helper_neighbors(index, c) =
+            if index <> num then c else ch
+
+fun 
+neighbors(str: string, num: int, ch: char): string =
+    let
+        fun helper_neighbors(index, c) =
+            if index <> num then c else ch
+    in
+        string_implode (string_imap_list (str, helper_neighbors))
+    end
+
+fun processLetter(idx, letter) =
+            let
+                val filteredStr = string_filter (AB, fn z => z <> letter)
+                fun helper(_, h) = neighbors (input, idx, h)
+
+fun current(): real =
+        if xs mod 2 = 0 then prev - 1.0 / Real.fromInt(xs)
+        else prev + 1.0 / Real.fromInt(xs)
+
+fun ln2_stream_helper (xs: int, prev: real): real strcon =
+    let
+      fun current(): real =
+        if xs mod 2 = 0 then prev - 1.0 / Real.fromInt(xs)
+        else prev + 1.0 / Real.fromInt(xs)
+      val nextStream = fn () => ln2_stream_helper(xs + 1, current())
+    in
+      strcon_cons(current(), nextStream)
+    end
+
+fun pairSumLess ((i1, j1), (i2, j2)) =
+      i1 + j1 < i2 + j2
+
+val allPairs = stream_concat (stream_tabulate (10000, fn i =>
+      stream_make_map (int1_streamize (i + 1), fn j => (i - j, j))
+
+fun helper (lst: 'a stream list, n: int) =    (*stream_ziplst *)
+      let
+        val currentElems = List.map (fn stm => stream_get_at(stm, n)) lst
+        val nextStream = fn () => helper (lst, n + 1)
+      in
+        strcon_cons (currentElems, nextStream)
+      end
+
+fun helperFactorial(num: int, number: int, output: int list): int list =
+            if num > n then
+                output
+            else
+                helperFactorial(num + 1, number * num, output @ [number])
+
+fun compute_row(prev_row: int list): int list =
+      [1] @ int1_foldleft(length prev_row - 1, [], fn (row, y) =>
+        row @ [List.nth(prev_row, y) + List.nth(prev_row, y + 1)]
+      ) @ [1]
+
+
+fun groupHelper([], current, acc) = acc
+      | groupHelper(x::rest, (count, value), acc) =
+          if x = value then
+            groupHelper(rest, (count + 1, value), acc)
+          else
+            groupHelper(rest, (1, x), (count, value)::acc)
+
+fun reverse(acc, []) = acc
+      | reverse(acc, x::rest) = reverse(x::acc, rest)
+
+fun triplet(xs, ys, zs) =
+    let
+      val x = list_head(xs)
+      val y = list_head(ys)
+      val z = list_head(zs)
+    in
+      (x, y, z) :: triplet(list_tail(xs), list_tail(ys), list_tail(zs))
+    end
+
+fun drop (n, xs) =
+  if n <= 0 then xs
+  else
+    drop(n - 1, list_tail(xs))
+
+fun grab(0, _) = []
+  | grab(_, []) = []
+  | grab(n, x::xs) = x :: grab(n-1, xs)
+
+fun drop(0, xs) = xs
+  | drop(_, []) = []
+  | drop(n, _::xs) = drop(n-1, xs)
+
+fun helper([], _, ys) = 
+  let
+    val n = list_length(xs)
+    val k' = if n = 0 then 0 else (k + k0) mod n
+    val x = list_nth(xs, k')
+    val xs' = grab(k', xs) @ drop(k' + 1, xs)
+  in
+    helper(xs', k', x :: ys)
+  end
+
+fun find_drawdowns(_, []) = 
+  cons([], fn() => 
+     find_drawdowns(fxs, []))
+  |  find_drawdowns(prev, x :: xs) = 
+     if x < prev then
+      let
+        val drawdowns = x :: fn(y => y >= x) xs
+      in 
+        cons(drawdowns.fn() => find_drawdowns(x, xs))
+      end
+    else
+      find_drawdowns(x, xs)
+
+fun real_power (x: real, n: int): real = 
+      if n = 0 then 1.0
+      else if n mod 2 = 0 then real_power (x * x, n div 2)
+      else x * real_power(x * x, n div 2) 
+
+fun helper_realpower(fxs, xn, n) = fn () =>
+      case fxs() of
+        strcon_nil => strcon_nil
+      | strcon_cons(a, fxs') =>
+        let
+          val x1 = xn + a * real_power(x0, n)
+        in
+          strcon_cons(x1, helper_realpower(fxs', x1, n + 1))
+        end
+
+fun helper_stream_drop(fxs, num) =
+      if num <= 0 then fxs
+      else
+        case fxs() of
+          strcon_nil => stream_nil()
+        | strcon_cons(_, fx) => helper_stream_drop(fx, num - 1)
+
+fun helper_steam_take(fxs, k) =
+      if k <= 0 then stream_nil()
+      else
+        case fxs() of
+          strcon_nil => stream_nil()
+        | strcon_cons(x, fx) => stream_cons(x, helper_stream_take(fx, k - 1))
 
 (* end of [BUCASCS320-2023-Sum1-mysmlib-cls.sml] *)
 
