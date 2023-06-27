@@ -29,27 +29,27 @@ wordle_hint(w1, w2) =
 ########################################################################
 
 def wordle_hint(w1, w2):
-    hints = []
+    word_hint = []
     char_set = []
-    char_count = []
+    count = []
 
     i = 0
     while i < len(w1) and i < len(w2):
-        char_w1 = w1[i]
-        char_w2 = w2[i]
+        char1 = w1[i]
+        char2 = w2[i]
 
-        if char_w2 not in char_set:
-            char_set.append(char_w2)
-            char_count.append(w1.count(char_w2))
+        if char2 not in char_set:
+            char_set.append(char2)
+            count.append(w1.count(char2))
 
-        index = char_set.index(char_w2)
+        index = char_set.index(char2)
 
-        hint = 1 if char_w1 == char_w2 else (0 if char_count[index] == 0 else 2)
-        hints.append((hint, char_w2))
-        char_count[index] -= 1
+        hint = 1 if char1 == char2 else (0 if count[index] == 0 else 2)
+        word_hint.append((hint, char2))
+        count[index] -= 1
 
         i += 1
 
-    return hints
+    return word_hint
 
 ########################################################################
